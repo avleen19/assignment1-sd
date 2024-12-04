@@ -1,0 +1,83 @@
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY,
+    Title VARCHAR(100),
+    Author VARCHAR(50),
+    PublishedYear INT
+);
+ALTER TABLE Books
+ADD ISBN VARCHAR(13);
+ALTER TABLE Books
+DROP COLUMN PublishedYear;
+
+
+
+
+
+SELECT Name
+FROM Students
+WHERE Age > 15;
+INSERT INTO Students (StudentID, Name, Age, Grade)
+VALUES (104, 'Tom Brown', 15, 'C');
+UPDATE Students
+SET Grade = 'A+'
+WHERE Name = 'Jane Doe';
+DELETE FROM Students
+WHERE Grade = 'C';
+
+
+
+
+GRANT SELECT, INSERT ON Books TO User2;
+REVOKE INSERT ON Books FROM User2;
+
+
+
+START TRANSACTION;
+INSERT INTO Orders (OrderID, ProductID, Quantity)
+VALUES (201, 105, 2);
+UPDATE Inventory
+SET Quantity = Quantity - 2
+WHERE ProductID = 105;
+-- Assuming the transaction is handled within a procedure or script
+BEGIN;
+
+INSERT INTO Orders (OrderID, ProductID, Quantity)
+VALUES (201, 105, 2);
+
+IF @@ERROR != 0 THEN
+    ROLLBACK;
+    PRINT 'Transaction Rolled Back';
+ELSE
+    UPDATE Inventory
+    SET Quantity = Quantity - 2
+    WHERE ProductID = 105;
+
+    IF @@ERROR != 0 THEN
+        ROLLBACK;
+        PRINT 'Transaction Rolled Back';
+    ELSE
+        COMMIT;
+        PRINT 'Transaction Committed';
+    END IF;
+END IF;
+
+
+
+
+
+
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Email VARCHAR(50),
+    Phone VARCHAR(15)
+);
+INSERT INTO Customers (CustomerID, Name, Email, Phone)
+VALUES (201, 'Emily Clark', 'emily@example.com', '1234567890');
+GRANT SELECT ON Customers TO AdminUser;
+START TRANSACTION;
+
+INSERT INTO Customers (CustomerID, Name, Email, Phone)
+VALUES (201, 'Emily Clark', 'emily@example.com', '1234567890');
+
+ROLLBACK;
